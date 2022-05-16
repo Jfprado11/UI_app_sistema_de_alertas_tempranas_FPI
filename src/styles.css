@@ -29,5 +29,12 @@ body {
 }
 body {
   margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
+}
+
+/*global styles for components
+=====================================================*/
+
+.container {
+  margin: 0.5rem 10rem 0;
 }
