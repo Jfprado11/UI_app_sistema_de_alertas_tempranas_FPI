@@ -11,6 +11,9 @@ import { SharedModule } from './components/shared/shared.module';
 // componets
 import { LoginComponent } from './components/login/login.component';
 
+// providars
+import { JwtHelperService, JWT_OPTIONS } from '@auth0/angular-jwt';
+
 @NgModule({
   declarations: [AppComponent, LoginComponent],
   imports: [
@@ -19,7 +22,9 @@ import { LoginComponent } from './components/login/login.component';
     BrowserAnimationsModule,
     SharedModule,
   ],
-  providers: [],
+  providers: [
+    {provide: JWT_OPTIONS, useValue: JWT_OPTIONS},
+    JwtHelperService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
