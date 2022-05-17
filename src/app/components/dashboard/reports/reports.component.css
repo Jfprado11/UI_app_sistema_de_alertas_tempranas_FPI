@@ -2,3 +2,26 @@ table {
   margin-top: 1rem;
   width: 100%;
 }
+
+.reports--container-form {
+  margin: 2rem 0;
+}
+.reports--container-form form > mat-form-field {
+  margin-right: 1.6rem;
+}
+mat-paginator {
+  background-color: #ef6c00;
+  color: white;
+}
+
+/* .reports--container-form form > button {
+  margin-left: 63.3rem;
+} */
+
+/* .login--input__witdth {
+  width: 80%;
+}
+
+.login--input__btn {
+  height: 5rem;
+} */

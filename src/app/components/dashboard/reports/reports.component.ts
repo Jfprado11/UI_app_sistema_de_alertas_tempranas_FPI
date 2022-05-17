@@ -1,24 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-
-export interface usuario {
-  usuario: string;
-  name: string;
-  lastname: number;
-  sexo: string;
-}
-
-const listUsuarios: usuario[] = [
-  { usuario: "usuairo", name: 'Hydrogen', lastname: 1.0079, sexo: 'H' },
-  { usuario: "usuairo", name: 'Helium', lastname: 4.0026, sexo: 'He' },
-  { usuario: "usuairo", name: 'Lithium', lastname: 6.941, sexo: 'Li' },
-  { usuario: "usuairo", name: 'Beryllium', lastname: 9.0122, sexo: 'Be' },
-  { usuario: "usuairo", name: 'Boron', lastname: 10.811, sexo: 'B' },
-  { usuario: "usuairo", name: 'Carbon', lastname: 12.0107, sexo: 'C' },
-  { usuario: "usuairo", name: 'Nitrogen', lastname: 14.0067, sexo: 'N' },
-  { usuario: "usuairo", name: 'Oxygen', lastname: 15.9994, sexo: 'O' },
-  { usuario: "usuairo", name: 'Fluorine', lastname: 18.9984, sexo: 'F' },
-  { usuario: "usuairo", name: 'Neon', lastname: 20.1797, sexo: 'Ne' },
-];
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
+import { FpiDataInterface } from 'src/app/interfaces/FpiData.interface';
 
 @Component({
   selector: 'app-reports',
@@ -26,10 +10,75 @@ const listUsuarios: usuario[] = [
   styleUrls: ['./reports.component.css'],
 })
 export class ReportsComponent implements OnInit {
+  formSearch: FormGroup;
+  start = false;
+  isLoading = false;
+  totalRows = 0;
+  pageSize = 5;
+  currentPage = 0;
+  pageSizeOptions: number[] = [5, 10, 25, 100];
+
+  dataSource: MatTableDataSource<FpiDataInterface> = new MatTableDataSource();
   displayedColumns: string[] = ['usuario', 'name', 'lastname', 'sexo'];
-  dataSource = listUsuarios;
 
-  constructor() {}
+  constructor(private fb: FormBuilder) {
+    this.formSearch = this.fb.group({
+      typeSearch: ['', Validators.required],
+      dataSearch: ['', Validators.required],
+    });
+  }
 
-  ngOnInit(): void {}
+  @ViewChild(MatPaginator)
+  paginator!: MatPaginator;
+
+  ngAfterViewInit() {
+    this.dataSource.paginator = this.paginator;
+  }
+
+  ngOnInit(): void {
+    console.log(this.dataSource);
+  }
+
+  searchInfoReq() {
+    const typeSearch = this.formSearch.value.typeSearch;
+    const dataSearch = this.formSearch.value.dataSearch;
+    this.isLoading = true;
+    const URL = `http://localhost:3000/api/v1/fpi-data/get-data?offset=${this.currentPage}&limit=${this.pageSize}`;
+    const token = localStorage.getItem('token');
+    const data = { [typeSearch]: dataSearch };
+
+    fetch(URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(data),
+    })
+      .then((res) => res.json())
+      .then(
+        (res) => {
+          console.log(res);
+          this.start = true;
+          this.dataSource.data = res;
+          setTimeout(() => {
+            this.paginator.pageIndex = this.currentPage;
+            console.log(res[0]['ALL_ROWS']);
+            this.paginator.length = res[0]['ALL_ROWS'];
+          });
+          this.isLoading = false;
+        },
+        (error) => {
+          console.log(error);
+          this.isLoading = false;
+        }
+      );
+  }
+
+  pageChanged(event: PageEvent) {
+    console.log({ event });
+    this.pageSize = event.pageSize;
+    this.currentPage = event.pageIndex;
+    this.searchInfoReq();
+  }
 }

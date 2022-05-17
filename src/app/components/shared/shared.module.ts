@@ -12,6 +12,9 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
+import { MatSelectModule } from '@angular/material/select';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 @NgModule({
   declarations: [],
@@ -28,6 +31,9 @@ import { MatTableModule } from '@angular/material/table';
     MatToolbarModule,
     MatIconModule,
     MatTableModule,
+    MatSelectModule,
+    MatProgressBarModule,
+    MatPaginatorModule,
   ],
   exports: [
     ReactiveFormsModule,
@@ -40,6 +46,9 @@ import { MatTableModule } from '@angular/material/table';
     MatToolbarModule,
     MatIconModule,
     MatTableModule,
+    MatSelectModule,
+    MatProgressBarModule,
+    MatPaginatorModule,
   ],
 })
 export class SharedModule {}

@@ -1,36 +1,68 @@
 <div class="container">
-  <mat-toolbar>
-    <span>Reports</span>
-  </mat-toolbar>
-  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
-    <!--- Note that these columns can be defined in any order.
-          The actual rendered columns are set as a property on the row definition" -->
+    <mat-toolbar>
+        <h2>Reports</h2>
+    </mat-toolbar>
+    <div class="reports--container-form">
+        <form [formGroup]="formSearch" (ngSubmit)="searchInfoReq()">
+            <mat-form-field appearance="fill">
+                <mat-label>tipo de busqueda</mat-label>
+                <mat-select formControlName="typeSearch">
+                    <mat-option value="ficha">Ficha</mat-option>
+                    <mat-option value="instructor">Nombre de Instructor</mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>datos a buscar</mat-label>
+                <input matInput autocomplete="off" formControlName="dataSearch" />
+            </mat-form-field>
+            <button type="submit" mat-raised-button color="primary" [disabled]="formSearch.invalid">Search</button>
+        </form>
+    </div>
+    <div class="container--table mat-elevation-z8" *ngIf="start">
+        <mat-progress-bar mode="indeterminate" *ngIf="isLoading"></mat-progress-bar>
+        <table mat-table [dataSource]="dataSource">
+            <!--- Note that these columns can be defined in any order.
+              The actual rendered columns are set as a property on the row definition" -->
 
-    <!-- Position Column -->
-    <ng-container matColumnDef="usuario">
-      <th mat-header-cell *matHeaderCellDef>Usuarios</th>
-      <td mat-cell *matCellDef="let element">{{ element.usuario }}</td>
-    </ng-container>
+            <!-- Position Column -->
+            <ng-container matColumnDef="usuario">
+                <th mat-header-cell *matHeaderCellDef>Ficha</th>
+                <td mat-cell *matCellDef="let element">{{ element['FICHA'] }}</td>
+            </ng-container>
 
-    <!-- Name Column -->
-    <ng-container matColumnDef="name">
-      <th mat-header-cell *matHeaderCellDef>Name</th>
-      <td mat-cell *matCellDef="let element">{{ element.name }}</td>
-    </ng-container>
+            <!-- Name Column -->
+            <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef>Nombre Programa</th>
+                <td mat-cell *matCellDef="let element">{{ element['NOMBRE_PROGRAMA'] }}</td>
+            </ng-container>
 
-    <!-- Weight Column -->
-    <ng-container matColumnDef="lastname">
-      <th mat-header-cell *matHeaderCellDef>LastName</th>
-      <td mat-cell *matCellDef="let element">{{ element.lastname }}</td>
-    </ng-container>
+            <!-- Weight Column -->
+            <ng-container matColumnDef="lastname">
+                <th mat-header-cell *matHeaderCellDef>Estado</th>
+                <td mat-cell *matCellDef="let element">{{ element['ESTADO'] }}</td>
+            </ng-container>
 
-    <!-- Symbol Column -->
-    <ng-container matColumnDef="sexo">
-      <th mat-header-cell *matHeaderCellDef>sexo</th>
-      <td mat-cell *matCellDef="let element">{{ element.sexo }}</td>
-    </ng-container>
+            <!-- Symbol Column -->
+            <ng-container matColumnDef="sexo">
+                <th mat-header-cell *matHeaderCellDef>Competencia</th>
+                <td mat-cell *matCellDef="let element">{{ element['COMPETENCIA'] }}</td>
+            </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-  </table>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        </table>
+        <mat-paginator
+            #paginator
+            [length]="totalRows"
+            [pageIndex]="currentPage"
+            [pageSize]="pageSize"
+            [pageSizeOptions]="pageSizeOptions"
+            (page)="pageChanged($event)"
+            aria-label="Select page"
+        >
+        </mat-paginator>
+    </div>
+    <div class="startSearch" *ngIf="!start">
+        <h2>&#9757; Empieza a buscar la Informacion</h2>
+    </div>
 </div>

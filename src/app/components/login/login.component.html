@@ -1,20 +1,20 @@
 <div class="body">
-  <mat-spinner  *ngIf="loading" class="spinner" diameter="80"></mat-spinner>
-  <div *ngIf="!loading" class="login">
-    <form [formGroup]="formLogin" (ngSubmit)="logIn()">
-      <img src="./assets/images/user.png" alt="User icon for login" width="30%" />
-      <h1>Sistema Alertas Tempranas FPI</h1>
-      <mat-form-field class="login--input__witdth" appearance="fill">
-        <mat-label>Username</mat-label>
-        <input type="text" matInput autocomplete="off" formControlName="username" />
-      </mat-form-field>
-      <mat-form-field class="login--input__witdth" appearance="fill">
-        <mat-label>Password</mat-label>
-        <input type="password" matInput autocomplete="off" formControlName="password" />
-      </mat-form-field>
-      <button type="submit" mat-raised-button color="primary" class="login--input__witdth login--input__btn" [disabled]="formLogin.invalid">
-        Log In
-      </button>
-    </form>
-  </div>
+    <mat-spinner *ngIf="loading" class="spinner" diameter="80"></mat-spinner>
+    <div *ngIf="!loading" class="login">
+        <form [formGroup]="formLogin" (ngSubmit)="logIn()">
+            <img src="./assets/images/user.png" alt="User icon for login" width="30%" />
+            <h1>Sistema Alertas Tempranas FPI</h1>
+            <mat-form-field class="login--input__witdth" appearance="fill">
+                <mat-label>Username</mat-label>
+                <input type="text" matInput autocomplete="off" formControlName="username" />
+            </mat-form-field>
+            <mat-form-field class="login--input__witdth" appearance="fill">
+                <mat-label>Password</mat-label>
+                <input type="password" matInput autocomplete="off" formControlName="password" />
+            </mat-form-field>
+            <button type="submit" mat-raised-button color="primary" class="login--input__witdth login--input__btn" [disabled]="formLogin.invalid">
+                Log In
+            </button>
+        </form>
+    </div>
 </div>
