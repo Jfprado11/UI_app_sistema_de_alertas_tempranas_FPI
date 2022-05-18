@@ -9,19 +9,43 @@ table {
 .reports--container-form form > mat-form-field {
   margin-right: 1.6rem;
 }
+
+.mat-header-cell,
+.mat-footer-cell,
+.mat-cell {
+  min-width: 12rem;
+  box-sizing: border-box;
+}
+
+.container--table-pag {
+  max-width: 100%;
+}
+
+.container__table {
+  max-width: 100%;
+  max-height: 50rem;
+  overflow: auto;
+}
+
+.mat-column-ficha {
+  padding-right: 1.5rem;
+}
+
+.mat-column-resulatado_aprendizaje {
+  padding-right: 1.3rem;
+  text-align: center;
+  min-width: 33rem;
+}
+.mat-column-competencia {
+  text-align: center;
+  padding-right: 1.3rem;
+}
+.mat-column-estado {
+  text-align: center;
+  padding-right: 1.3rem;
+}
+
 mat-paginator {
   background-color: #ef6c00;
   color: white;
 }
-
-/* .reports--container-form form > button {
-  margin-left: 63.3rem;
-} */
-
-/* .login--input__witdth {
-  width: 80%;
-}
-
-.login--input__btn {
-  height: 5rem;
-} */

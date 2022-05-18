@@ -1,3 +1,4 @@
+import { DatePipe } from '@angular/common';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
@@ -19,9 +20,23 @@ export class ReportsComponent implements OnInit {
   pageSizeOptions: number[] = [5, 10, 25, 100];
 
   dataSource: MatTableDataSource<FpiDataInterface> = new MatTableDataSource();
-  displayedColumns: string[] = ['usuario', 'name', 'lastname', 'sexo'];
+  displayedColumns: string[] = [
+    'ficha',
+    'nombre_Programa',
+    'competencia',
+    'estado',
+    'resulatado_aprendizaje',
+    'jucio_de_evaluacion',
+    'instructor_evaluo',
+    'nombre',
+    'fecha_inicio',
+    'fecha_fin',
+    'fecha_lectiva',
+    'fecha_actualizacion_reporte',
+    'vencimiento_terminos',
+  ];
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private datepipe: DatePipe) {
     this.formSearch = this.fb.group({
       typeSearch: ['', Validators.required],
       dataSearch: ['', Validators.required],
@@ -59,12 +74,34 @@ export class ReportsComponent implements OnInit {
       .then(
         (res) => {
           console.log(res);
+          const dataTransform = res.map((item: FpiDataInterface) => {
+            return {
+              ...item,
+              FECHA_INICIO: this.datepipe.transform(
+                item['FECHA_INICIO'],
+                'dd/MM/yyyy'
+              ),
+              FECHA_FIN: this.datepipe.transform(
+                item['FECHA_FIN'],
+                'dd/MM/yyyy'
+              ),
+              FIN_LECTIVA: this.datepipe.transform(
+                item['FIN_LECTIVA'],
+                'dd/MM/yyyy'
+              ),
+              VENCIMIENTO_TERMINOS: this.datepipe.transform(
+                item['VENCIMIENTO_TERMINOS'],
+                'dd/MM/yyyy'
+              ),
+            };
+          });
+          console.log(dataTransform);
           this.start = true;
-          this.dataSource.data = res;
+          this.dataSource.data = dataTransform;
           setTimeout(() => {
             this.paginator.pageIndex = this.currentPage;
-            console.log(res[0]['ALL_ROWS']);
-            this.paginator.length = res[0]['ALL_ROWS'];
+            console.log(dataTransform[0]['ALL_ROWS']);
+            this.paginator.length = dataTransform[0]['ALL_ROWS'];
           });
           this.isLoading = false;
         },
