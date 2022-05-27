@@ -14,9 +14,10 @@ import { LoginComponent } from './components/login/login.component';
 
 // providars
 import { JwtHelperService, JWT_OPTIONS } from '@auth0/angular-jwt';
+import { NotFoundComponent } from './components/not-found/not-found.component';
 
 @NgModule({
-  declarations: [AppComponent, LoginComponent],
+  declarations: [AppComponent, LoginComponent, NotFoundComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
