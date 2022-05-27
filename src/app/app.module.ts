@@ -15,6 +15,8 @@ import { LoginComponent } from './components/login/login.component';
 // providars
 import { JwtHelperService, JWT_OPTIONS } from '@auth0/angular-jwt';
 import { NotFoundComponent } from './components/not-found/not-found.component';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { TokenInterceptorService } from './services/token-interceptor.service';
 
 @NgModule({
   declarations: [AppComponent, LoginComponent, NotFoundComponent],
@@ -28,6 +30,12 @@ import { NotFoundComponent } from './components/not-found/not-found.component';
     { provide: JWT_OPTIONS, useValue: JWT_OPTIONS },
     JwtHelperService,
     DatePipe,
+    // Token interceptor
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: TokenInterceptorService,
+      multi: true,
+    },
   ],
   bootstrap: [AppComponent],
 })
