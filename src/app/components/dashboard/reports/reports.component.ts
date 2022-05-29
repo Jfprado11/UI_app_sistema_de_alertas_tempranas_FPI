@@ -1,24 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-
-export interface usuario {
-  usuario: string;
-  name: string;
-  lastname: number;
-  sexo: string;
-}
-
-const listUsuarios: usuario[] = [
-  { usuario: "usuairo", name: 'Hydrogen', lastname: 1.0079, sexo: 'H' },
-  { usuario: "usuairo", name: 'Helium', lastname: 4.0026, sexo: 'He' },
-  { usuario: "usuairo", name: 'Lithium', lastname: 6.941, sexo: 'Li' },
-  { usuario: "usuairo", name: 'Beryllium', lastname: 9.0122, sexo: 'Be' },
-  { usuario: "usuairo", name: 'Boron', lastname: 10.811, sexo: 'B' },
-  { usuario: "usuairo", name: 'Carbon', lastname: 12.0107, sexo: 'C' },
-  { usuario: "usuairo", name: 'Nitrogen', lastname: 14.0067, sexo: 'N' },
-  { usuario: "usuairo", name: 'Oxygen', lastname: 15.9994, sexo: 'O' },
-  { usuario: "usuairo", name: 'Fluorine', lastname: 18.9984, sexo: 'F' },
-  { usuario: "usuairo", name: 'Neon', lastname: 20.1797, sexo: 'Ne' },
-];
+import { DatePipe } from '@angular/common';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
+import { FpiDataInterface } from 'src/app/interfaces/FpiData.interface';
 
 @Component({
   selector: 'app-reports',
@@ -26,10 +11,111 @@ const listUsuarios: usuario[] = [
   styleUrls: ['./reports.component.css'],
 })
 export class ReportsComponent implements OnInit {
-  displayedColumns: string[] = ['usuario', 'name', 'lastname', 'sexo'];
-  dataSource = listUsuarios;
+  formSearch: FormGroup;
+  start = false;
+  isLoading = false;
+  totalRows = 0;
+  pageSize = 5;
+  currentPage = 0;
+  pageSizeOptions: number[] = [5, 10, 25, 100];
 
-  constructor() {}
+  dataSource: MatTableDataSource<FpiDataInterface> = new MatTableDataSource();
+  displayedColumns: string[] = [
+    'ficha',
+    'nombre_Programa',
+    'competencia',
+    'estado',
+    'resulatado_aprendizaje',
+    'jucio_de_evaluacion',
+    'instructor_evaluo',
+    'nombre',
+    'fecha_inicio',
+    'fecha_fin',
+    'fecha_lectiva',
+    'fecha_actualizacion_reporte',
+    'vencimiento_terminos',
+  ];
 
-  ngOnInit(): void {}
+  constructor(private fb: FormBuilder, private datepipe: DatePipe) {
+    this.formSearch = this.fb.group({
+      typeSearch: ['', Validators.required],
+      dataSearch: ['', Validators.required],
+    });
+  }
+
+  @ViewChild(MatPaginator)
+  paginator!: MatPaginator;
+
+  ngAfterViewInit() {
+    this.dataSource.paginator = this.paginator;
+  }
+
+  ngOnInit(): void {
+    console.log(this.dataSource);
+  }
+
+  searchInfoReq() {
+    const typeSearch = this.formSearch.value.typeSearch;
+    const dataSearch = this.formSearch.value.dataSearch;
+    this.isLoading = true;
+    const URL = `https://api-sistemas-alertas-tempranas.herokuapp.com/api/v1/fpi-data/get-data?offset=${this.currentPage}&limit=${this.pageSize}`;
+    const token = localStorage.getItem('token');
+    const data = { [typeSearch]: dataSearch };
+
+    fetch(URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(data),
+    })
+      .then((res) => res.json())
+      .then(
+        (res) => {
+          console.log(res);
+          const dataTransform = res.map((item: FpiDataInterface) => {
+            return {
+              ...item,
+              FECHA_INICIO: this.datepipe.transform(
+                item['FECHA_INICIO'],
+                'dd/MM/yyyy'
+              ),
+              FECHA_FIN: this.datepipe.transform(
+                item['FECHA_FIN'],
+                'dd/MM/yyyy'
+              ),
+              FIN_LECTIVA: this.datepipe.transform(
+                item['FIN_LECTIVA'],
+                'dd/MM/yyyy'
+              ),
+              VENCIMIENTO_TERMINOS: this.datepipe.transform(
+                item['VENCIMIENTO_TERMINOS'],
+                'dd/MM/yyyy'
+              ),
+            };
+          });
+          console.log(dataTransform);
+          this.start = true;
+          this.dataSource.data = dataTransform;
+          setTimeout(() => {
+            this.paginator.pageIndex = this.currentPage;
+            console.log(dataTransform[0]['ALL_ROWS']);
+            this.paginator.length = dataTransform[0]['ALL_ROWS'];
+          });
+          this.isLoading = false;
+        },
+        (error) => {
+          console.log(error);
+          this.isLoading = false;
+        }
+      );
+  }
+
+  pageChanged(event: PageEvent) {
+    console.log({ event });
+    this.pageSize = event.pageSize;
+    this.currentPage = event.pageIndex;
+    this.searchInfoReq();
+  }
 }

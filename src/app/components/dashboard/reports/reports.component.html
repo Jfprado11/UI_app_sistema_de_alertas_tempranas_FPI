@@ -1,36 +1,121 @@
 <div class="container">
-  <mat-toolbar>
-    <span>Reports</span>
-  </mat-toolbar>
-  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
-    <!--- Note that these columns can be defined in any order.
-          The actual rendered columns are set as a property on the row definition" -->
+    <mat-toolbar>
+        <h2>Reports</h2>
+    </mat-toolbar>
+    <div class="reports--container-form">
+        <form [formGroup]="formSearch" (ngSubmit)="searchInfoReq()">
+            <mat-form-field appearance="fill">
+                <mat-label>tipo de busqueda</mat-label>
+                <mat-select formControlName="typeSearch">
+                    <mat-option value="ficha">Ficha</mat-option>
+                    <mat-option value="instructor">Nombre de Instructor</mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>datos a buscar</mat-label>
+                <input matInput autocomplete="off" formControlName="dataSearch" />
+            </mat-form-field>
+            <button type="submit" mat-raised-button color="primary" [disabled]="formSearch.invalid">Search</button>
+        </form>
+    </div>
+    <div class="container--table-pag mat-elevation-z8" *ngIf="start">
+        <div class="container__table">
+            <mat-progress-bar mode="indeterminate" *ngIf="isLoading"></mat-progress-bar>
+            <table mat-table [dataSource]="dataSource" class="table--fpi-data">
+                <!-- Ficha Column -->
+                <ng-container matColumnDef="ficha">
+                    <th mat-header-cell *matHeaderCellDef>Ficha</th>
+                    <td mat-cell *matCellDef="let element">{{ element['FICHA'] }}</td>
+                </ng-container>
 
-    <!-- Position Column -->
-    <ng-container matColumnDef="usuario">
-      <th mat-header-cell *matHeaderCellDef>Usuarios</th>
-      <td mat-cell *matCellDef="let element">{{ element.usuario }}</td>
-    </ng-container>
+                <!-- Nombre Column -->
+                <ng-container matColumnDef="nombre">
+                    <th mat-header-cell *matHeaderCellDef>Nombre</th>
+                    <td mat-cell *matCellDef="let element">{{ element['NOMBRES'] }}</td>
+                </ng-container>
 
-    <!-- Name Column -->
-    <ng-container matColumnDef="name">
-      <th mat-header-cell *matHeaderCellDef>Name</th>
-      <td mat-cell *matCellDef="let element">{{ element.name }}</td>
-    </ng-container>
+                <!-- Resultado de aprendizaje Column -->
+                <ng-container matColumnDef="resulatado_aprendizaje">
+                    <th mat-header-cell *matHeaderCellDef>Resultado aprendizaje</th>
+                    <td mat-cell *matCellDef="let element">{{ element['RESULTADO_DE_APRENDIZAJE'] }}</td>
+                </ng-container>
 
-    <!-- Weight Column -->
-    <ng-container matColumnDef="lastname">
-      <th mat-header-cell *matHeaderCellDef>LastName</th>
-      <td mat-cell *matCellDef="let element">{{ element.lastname }}</td>
-    </ng-container>
+                <!-- Name Column -->
+                <ng-container matColumnDef="nombre_Programa">
+                    <th mat-header-cell *matHeaderCellDef>Nombre Programa</th>
+                    <td mat-cell *matCellDef="let element">{{ element['NOMBRE_PROGRAMA'] }}</td>
+                </ng-container>
 
-    <!-- Symbol Column -->
-    <ng-container matColumnDef="sexo">
-      <th mat-header-cell *matHeaderCellDef>sexo</th>
-      <td mat-cell *matCellDef="let element">{{ element.sexo }}</td>
-    </ng-container>
+                <!-- Weight Column -->
+                <ng-container matColumnDef="estado">
+                    <th mat-header-cell *matHeaderCellDef>Estado</th>
+                    <td mat-cell *matCellDef="let element">{{ element['ESTADO'] }}</td>
+                </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-  </table>
+                <!-- Symbol Column -->
+                <ng-container matColumnDef="competencia">
+                    <th mat-header-cell *matHeaderCellDef>Competencia</th>
+                    <td mat-cell *matCellDef="let element">{{ element['COMPETENCIA'] }}</td>
+                </ng-container>
+
+                <!-- jucio_de_evaluacion column -->
+                <ng-container matColumnDef="jucio_de_evaluacion">
+                    <th mat-header-cell *matHeaderCellDef>Jucio De Evaluacion</th>
+                    <td mat-cell *matCellDef="let element">{{ element['JUICIO_DE_ EVALUACION'] }}</td>
+                </ng-container>
+
+                <!-- Funcionario evaluo ficha column -->
+                <ng-container matColumnDef="instructor_evaluo">
+                    <th mat-header-cell *matHeaderCellDef>Funcionario Evaluo Ficha</th>
+                    <td mat-cell *matCellDef="let element">{{ element['FUNCIONARIO_QUE_EVALUO_EN_LA_FICHA'] }}</td>
+                </ng-container>
+
+                <!-- fecha de Inicio column -->
+                <ng-container matColumnDef="fecha_inicio">
+                    <th mat-header-cell *matHeaderCellDef>Fecha de inicio</th>
+                    <td mat-cell *matCellDef="let element">{{ element['FECHA_INICIO'] }}</td>
+                </ng-container>
+
+                <!-- fecha de fin column -->
+                <ng-container matColumnDef="fecha_fin">
+                    <th mat-header-cell *matHeaderCellDef>Fecha Fin</th>
+                    <td mat-cell *matCellDef="let element">{{ element['FECHA_FIN'] }}</td>
+                </ng-container>
+
+                <!-- fin lectiva column -->
+                <ng-container matColumnDef="fecha_lectiva">
+                    <th mat-header-cell *matHeaderCellDef>Fin Lectiva</th>
+                    <td mat-cell *matCellDef="let element">{{ element['FIN_LECTIVA'] }}</td>
+                </ng-container>
+
+                <!-- fecha actualizacion reportes column -->
+                <ng-container matColumnDef="fecha_actualizacion_reporte">
+                    <th mat-header-cell *matHeaderCellDef>Fecha actualizacion reporte</th>
+                    <td mat-cell *matCellDef="let element">{{ element['FECHA_ACTUALIZACION_REPORTE'] }}</td>
+                </ng-container>
+
+                <!-- fecha de inico column -->
+                <ng-container matColumnDef="vencimiento_terminos">
+                    <th mat-header-cell *matHeaderCellDef>Vencimiento Terminos</th>
+                    <td mat-cell *matCellDef="let element">{{ element['VENCIMIENTO_TERMINOS'] }}</td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+            </table>
+        </div>
+        <mat-paginator
+            #paginator
+            [length]="totalRows"
+            [pageIndex]="currentPage"
+            [pageSize]="pageSize"
+            [pageSizeOptions]="pageSizeOptions"
+            (page)="pageChanged($event)"
+            aria-label="Select page"
+        >
+        </mat-paginator>
+    </div>
+    <div class="startSearch" *ngIf="!start">
+        <h2>&#9757; Empieza a buscar la Informacion</h2>
+    </div>
 </div>

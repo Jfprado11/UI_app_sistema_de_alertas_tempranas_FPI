@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -15,28 +17,47 @@ export class LoginComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private _snackBar: MatSnackBar,
-    private router: Router
+    private authService: AuthService,
+    private router: Router,
+    private titleService: Title
   ) {
     this.formLogin = this.fb.group({
       username: ['', Validators.required],
       password: ['', Validators.required],
     });
+    this.titleService.setTitle('Login');
   }
 
   ngOnInit(): void {}
 
   logIn() {
-    console.log(this.formLogin);
     const username = this.formLogin.value.username;
     const password = this.formLogin.value.password;
+    this.loading = true;
 
-    if (username === 'admin' && password === 'admin123') {
-      this.router.navigate(['dashboard']);
-    } else {
-      //no autheticated
-      this.LoginError();
-      this.formLogin.reset();
-    }
+    this.authService.signIn({ username, password }).subscribe(
+      (res: any) => {
+        setTimeout(() => {
+          localStorage.setItem('token', res.token);
+          this.router.navigate(['dashboard']);
+          this.loading = false;
+        }, 1000);
+      },
+      (error) => {
+        if (error !== 200) {
+          console.log(error);
+          this.LoginError();
+          this.formLogin.reset();
+          this.loading = false;
+        }
+      }
+    );
+
+    // if (username === 'admin' && password === 'admin123') {
+    // } else {
+    //   //no autheticated
+    //   this.LoginError();
+    // }
   }
 
   LoginError() {
