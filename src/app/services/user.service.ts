@@ -6,7 +6,7 @@ import { UserGetInterface } from '../interfaces/user.interface';
   providedIn: 'root',
 })
 export class UserService {
-  private URL = 'http://localhost:3000';
+  private URL = 'https://api-sistemas-alertas-tempranas.herokuapp.com';
 
   constructor(private http: HttpClient) {}
 

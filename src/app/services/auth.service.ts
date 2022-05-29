@@ -7,7 +7,7 @@ import { UserLogInterface } from '../interfaces/userLog.interface';
   providedIn: 'root',
 })
 export class AuthService {
-  private URL = 'http://localhost:3000';
+  private URL = 'https://api-sistemas-alertas-tempranas.herokuapp.com';
 
   constructor(private http: HttpClient, private jwtHelper: JwtHelperService) {}
 
