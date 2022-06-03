@@ -61,7 +61,7 @@ export class ReportsComponent implements OnInit {
     const typeSearch = this.formSearch.value.typeSearch;
     const dataSearch = this.formSearch.value.dataSearch;
     this.isLoading = true;
-    const URL = `http://localhost:3000/api/v1/fpi-data/get-data?offset=${this.currentPage}&limit=${this.pageSize}`;
+    const URL = `https://api-sistemas-alertas-tempranas.herokuapp.com/api/v1/fpi-data/get-data?offset=${this.currentPage}&limit=${this.pageSize}`;
     const token = localStorage.getItem('token');
     const data = { [typeSearch]: dataSearch };
 
