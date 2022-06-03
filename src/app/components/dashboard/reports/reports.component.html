@@ -9,6 +9,7 @@
                 <mat-select formControlName="typeSearch">
                     <mat-option value="ficha">Ficha</mat-option>
                     <mat-option value="instructor">Nombre de Instructor</mat-option>
+                    <mat-option value="estudiante">Numero de Documento del Estudiante</mat-option>
                 </mat-select>
             </mat-form-field>
             <mat-form-field appearance="fill">
@@ -30,8 +31,14 @@
 
                 <!-- Nombre Column -->
                 <ng-container matColumnDef="nombre">
-                    <th mat-header-cell *matHeaderCellDef>Nombre</th>
+                    <th mat-header-cell *matHeaderCellDef>Nombre Estudiante</th>
                     <td mat-cell *matCellDef="let element">{{ element['NOMBRES'] }}</td>
+                </ng-container>
+
+                <!-- Apellido Column -->
+                <ng-container matColumnDef="apellido">
+                    <th mat-header-cell *matHeaderCellDef>Apellido Estudiante</th>
+                    <td mat-cell *matCellDef="let element">{{ element['APELLIDOS'] }}</td>
                 </ng-container>
 
                 <!-- Resultado de aprendizaje Column -->
@@ -117,5 +124,8 @@
     </div>
     <div class="startSearch" *ngIf="!start">
         <h2>&#9757; Empieza a buscar la Informacion</h2>
+        <div *ngIf="loadingFirst" class="load-first">
+            <p>Loading</p>
+        </div>
     </div>
 </div>

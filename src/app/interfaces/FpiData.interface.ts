@@ -7,6 +7,7 @@ export interface FpiDataInterface {
   ['FUNCIONARIO_QUE_EVALUO_EN_LA_FICHA']: string;
   ['RESULTADO_DE_APRENDIZAJE']: string;
   ['NOMBRES']: string;
+  ['APELLIDOS']: string;
   ['FECHA_INICIO']: string;
   ['FECHA_FIN']: string;
   ['FIN_LECTIVA']: string;

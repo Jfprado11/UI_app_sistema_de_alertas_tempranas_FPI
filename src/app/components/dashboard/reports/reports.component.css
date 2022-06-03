@@ -49,3 +49,14 @@ mat-paginator {
   background-color: #ef6c00;
   color: white;
 }
+
+.load-first {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  font-size: 2rem;
+}
+
+mat-cell {
+  font-size: 0.6rem;
+}

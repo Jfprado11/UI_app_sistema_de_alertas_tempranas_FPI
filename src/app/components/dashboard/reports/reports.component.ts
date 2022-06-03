@@ -12,6 +12,7 @@ import { FpiDataInterface } from 'src/app/interfaces/FpiData.interface';
 })
 export class ReportsComponent implements OnInit {
   formSearch: FormGroup;
+  loadingFirst = false;
   start = false;
   isLoading = false;
   totalRows = 0;
@@ -29,6 +30,7 @@ export class ReportsComponent implements OnInit {
     'jucio_de_evaluacion',
     'instructor_evaluo',
     'nombre',
+    'apellido',
     'fecha_inicio',
     'fecha_fin',
     'fecha_lectiva',
@@ -55,10 +57,11 @@ export class ReportsComponent implements OnInit {
   }
 
   searchInfoReq() {
+    this.loadingFirst = true;
     const typeSearch = this.formSearch.value.typeSearch;
     const dataSearch = this.formSearch.value.dataSearch;
     this.isLoading = true;
-    const URL = `https://api-sistemas-alertas-tempranas.herokuapp.com/api/v1/fpi-data/get-data?offset=${this.currentPage}&limit=${this.pageSize}`;
+    const URL = `http://localhost:3000/api/v1/fpi-data/get-data?offset=${this.currentPage}&limit=${this.pageSize}`;
     const token = localStorage.getItem('token');
     const data = { [typeSearch]: dataSearch };
 
@@ -104,10 +107,12 @@ export class ReportsComponent implements OnInit {
             this.paginator.length = dataTransform[0]['ALL_ROWS'];
           });
           this.isLoading = false;
+          this.loadingFirst = false;
         },
         (error) => {
           console.log(error);
           this.isLoading = false;
+          this.loadingFirst = false;
         }
       );
   }
